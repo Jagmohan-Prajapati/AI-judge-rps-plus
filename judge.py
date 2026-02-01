@@ -4,9 +4,7 @@ from google import genai
 
 # Configuration
 client = genai.Client(api_key="YOUR_GEMINI_API_KEY")
-
 MODEL_NAME = "models/gemini-2.0-flash"
-
 VALID_BOT_MOVES = ["rock", "paper", "scissors", "bomb"]
 
 
