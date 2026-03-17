@@ -31,11 +31,12 @@ graph TD
 | Prompt storage  | /prompts directory |
 
 ## Project Structure
-├── prompts/          # System prompt files
-├── judge.py          # Main judge logic
-├── demo.md           # Example interactions
-├── requirements.txt
-└── README.md
+
+├── prompts/          # System prompt files  
+├── judge.py          # Main judge logic  
+├── demo.md           # Example interactions  
+├── requirements.txt  
+└── README.md  
 
 ## How the System Works
 
@@ -59,12 +60,12 @@ graph TD
 
 ## Example Usage
 
-> Enter Move 1: I throw a rock
-> Enter Move 2: bomb
+> Enter Move 1: I throw a rock  
+> Enter Move 2: bomb  
 
-Winner: Player 2
-Reason: Bomb destroys Rock. Player 2 wins.
-Validity: Valid moves
+Winner: Player 2  
+Reason: Bomb destroys Rock. Player 2 wins.  
+Validity: Valid moves  
 
 ## Prompt Design Principles
 
