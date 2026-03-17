@@ -1,95 +1,75 @@
-# AI Judge – Rock–Paper–Scissors-Bomb
+# AI Judge — Rock-Paper-Scissors-Bomb
 
-## Overview
+A prompt-native AI decision agent that evaluates free-text player moves for a Rock-Paper-Scissors-Bomb game and returns structured, explainable verdicts. The engineering focus is on **prompt quality**, **instruction design**, and **ambiguity handling** — not game logic.
 
-This project implements a **prompt-driven AI Judge** that evaluates free-text user inputs against a fixed set of game rules and produces **structured, explainable decisions**.
+## Project Overview
 
-The focus is on:
-- Prompt quality
-- Instruction design
-- Ambiguity handling
-- Explainability
+Traditional game judges use rigid if-else logic. This project replaces that entirely with a language model judge driven by a carefully designed system prompt. The judge reads natural language inputs, applies game rules, resolves edge cases, and produces structured JSON verdicts with human-readable reasoning.
 
-The system intentionally avoids hardcoding logic and instead delegates reasoning and judgment to the language model via a carefully designed prompt.
+**Engineering concept:** Prompt engineering, LLM-as-rule-engine, explainable AI output via instruction design.
 
----
+## Architecture
 
-## Core Idea
+```mermaid
+graph TD
+    A[Player 1 Input - Free Text] --> C[CLI Interface]
+    B[Player 2 Input - Free Text] --> C
+    C --> D[System Prompt + User Input Assembled]
+    D --> E[LLM - Gemini API]
+    E --> F[Structured JSON Verdict]
+    F --> G[Winner + Reason Displayed]
+    H[prompts/ directory] --> D
+```
 
-The language model acts as the **decision-making authority**.
+## Tech Stack
 
-The code:
-- Passes user input and game state
-- Stores minimal state (round number, bomb usage)
-- Displays the model’s structured decision
+| Layer           | Technology        |
+|-----------------|------------------|
+| Language        | Python 3.11+     |
+| AI              | Gemini API       |
+| Interface       | CLI              |
+| Prompt storage  | /prompts directory |
 
-All interpretation, validation, and explanation are driven by prompt design.
+## Project Structure
+├── prompts/          # System prompt files
+├── judge.py          # Main judge logic
+├── demo.md           # Example interactions
+├── requirements.txt
+└── README.md
 
----
+## How the System Works
 
-## Game Rules
+1. User provides two player moves in free text  
+2. Input is combined with the system prompt from `prompts/`  
+3. LLM evaluates input against encoded game rules  
+4. A structured JSON verdict is returned: `{ winner, reason, move_a, move_b, valid }`  
+5. CLI displays the result with a human-readable explanation
 
-- Valid moves: `rock`, `paper`, `scissors`, `bomb`
-- `bomb` can be used only once
-- `bomb` beats all other moves
-- `bomb` vs `bomb` results in a draw
-- Invalid or unclear moves waste the turn
+## How to Run Locally
 
----
+`git clone https://github.com/Jagmohan-Prajapati/AI-judge-rps-plus.git`
 
-## Architectural Separation
+`cd AI-judge-rps-plus`
 
-The solution conceptually separates:
+`pip install -r requirements.txt`
 
-1. **Intent Understanding**  
-   Mapping free-text input to possible moves and detecting ambiguity
+`export GEMINI_API_KEY=your_api_key_here`
 
-2. **Game Logic**  
-   Rule enforcement and outcome determination
+`python judge.py`
 
-3. **Response Generation**  
-   Clear, structured explanations for the user
+## Example Usage
 
-This separation is enforced through **prompt structure**, not code complexity.
+> Enter Move 1: I throw a rock
+> Enter Move 2: bomb
 
----
+Winner: Player 2
+Reason: Bomb destroys Rock. Player 2 wins.
+Validity: Valid moves
 
-## Failure Cases Considered
+## Prompt Design Principles
 
-- Ambiguous phrasing (e.g. “something strong”)
-- Metaphors (e.g. “drop a nuke”)
-- Multiple moves in one input
-- Bomb reuse attempts
-- Hesitant language (“probably scissors”)
-- Emoji-only inputs
-
-The AI Judge never guesses intent.
-
----
-
-## How to Run the Agent
-
-### 1. Clone the repository
-git clone <https://github.com/Jagmohan-Prajapati/AI-judge-rps-plus.git>
-cd ai-judge-rps-plus
-
-### 2. Install dependencies
-pip install -r requirements.txt
-or 
-pip install -U google-genai    
-
-### 3. Set your Gemini API key
-Edit `judge.py` and replace:
-genai.configure(api_key = "YOUR_GEMINI_API_KEY")
-
-### 4. Run the Agent
-python judge.py
-
-### 5. Play via CLI
-Type `exit` to stop.
-
-## What would i improve next
-- Confidence scoring for intent clarity
-- Multi-round summary output
-- Adversarial fuzz testing
-- Extension to other rule-based judging tasks
+The prompts/ directory contains the system prompt built around:
+1. Rule encoding — game rules stated declaratively, not procedurally
+2. Ambiguity handling — fallback verdicts for unclear or invalid inputs
+3. Output format — strict JSON schema enforced through instruction
+4. Explainability — every verdict requires a human-readable reason field
